@@ -1,0 +1,44 @@
+THIRD-PARTY NOTICES
+===================
+
+Open Mastering Studio is free software, Copyright (C) 2026 Al Oomens, distributed
+under the GNU Affero General Public License version 3 (see LICENSE.txt). It is built
+with the components below, each used under a license that permits distribution as
+part of an AGPLv3 work. Their complete source code is included in the Open Mastering
+Studio source package (external/ folder).
+
+JUCE 8.0.4
+  Copyright (c) Raw Material Software Limited.
+  Used under the GNU Affero General Public License version 3 (AGPLv3).
+  https://juce.com  -  https://github.com/juce-framework/JUCE
+
+Steinberg VST3 SDK (as bundled with JUCE 8.0.4)
+  (c) Steinberg Media Technologies GmbH.
+  Used under the GNU General Public License version 3 (GPLv3), one of the two licenses
+  the SDK is offered under (the other is the proprietary Steinberg VST3 License).
+  VST is a registered trademark of Steinberg Media Technologies GmbH.
+
+Steinberg ASIO SDK 2.3 (standalone app only)
+  (c) Steinberg Media Technologies GmbH.
+  Used under the GNU General Public License version 3 (GPLv3), one of the two licenses
+  the SDK is offered under (the other is the proprietary Steinberg ASIO License).
+  ASIO is a trademark of Steinberg Media Technologies GmbH.
+
+Libraries included in JUCE and used by Open Mastering Studio
+  FLAC (libFLAC)            BSD license, Copyright (c) Josh Coalson and the Xiph.Org Foundation
+  Ogg Vorbis (libvorbis,    BSD license, Copyright (c) the Xiph.Org Foundation
+    libogg)
+  zlib                      zlib license, Copyright (c) Jean-loup Gailly and Mark Adler
+  libpng                    libpng/zlib license, Copyright (c) the PNG Reference Library authors
+  jpeglib                   Independent JPEG Group license (this software is based in part
+                            on the work of the Independent JPEG Group)
+  HarfBuzz                  "Old MIT" license, Copyright (c) the HarfBuzz authors
+  SheenBidi                 Apache License 2.0, Copyright (c) Muhammad Tayyab Akram
+  The full license text of each library is in its folder under
+  external/JUCE/modules in the source package.
+
+Algorithms (published research, no code copied)
+  Tape (Modeled) uses the Jiles-Atherton hysteresis model as applied to tape by
+  J. Chowdhury, "Real-time Physical Modelling for Analog Tape Machines", DAFx 2019.
+  Dither noise shaping uses R. Wannamaker's 9-coefficient F-weighted filter
+  ("Psychoacoustically Optimal Noise Shaping", JAES 1992).

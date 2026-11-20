@@ -1,0 +1,75 @@
+OPEN MASTERING STUDIO {VERSION} - Windows 64-bit
+================================================
+
+Contents
+--------
+  VST3\Open Mastering Studio.vst3        The plugin (a folder - keep it whole)
+  Standalone\Open Mastering Studio.exe   The standalone app (single file, no install needed)
+  Install VST3.bat                       Copies the plugin into C:\Program Files\Common Files\VST3
+  README.md                              Full manual: signal chain, meters, presets, export
+  MEASUREMENTS.md                        Measured distortion, aliasing, true peak, latency, CPU
+  LICENSE.txt                            GNU Affero General Public License version 3
+  THIRD-PARTY-NOTICES.txt                Licenses for included components
+
+License
+-------
+Open Mastering Studio is free software under the GNU Affero General Public
+License version 3 (LICENSE.txt). Copyright (C) 2026 Al Oomens.
+You may use it for anything and share it freely. When you share it, pass on
+this zip together with the source code zip
+(OpenMasteringStudio-{VERSION}-source.zip). It comes with NO WARRANTY.
+Click the OPEN MASTERING STUDIO title in the app or plugin for the license notice.
+
+Install the VST3 plugin
+-----------------------
+Option A: Double-click "Install VST3.bat" and click Yes when Windows asks for
+administrator permission.
+
+Option B: Copy the whole "Open Mastering Studio.vst3" folder from the VST3 folder into
+    C:\Program Files\Common Files\VST3
+
+Then rescan plugins in your DAW. Insert Open Mastering Studio last on your
+stereo master bus. It reports its latency (about 7.5 ms; about 90 ms more for
+each linear-phase option), so the DAW compensates.
+
+Use the standalone app
+----------------------
+Run Standalone\Open Mastering Studio.exe from anywhere (Desktop, USB stick, etc.).
+  1. Click Open..., or drag a WAV / AIFF / FLAC / MP3 / OGG file onto the window.
+  2. Shape the master while it plays.
+  3. Choose a format and click Export Master...
+
+1.8.0: renamed Open Mastering Studio (see "Upgrading from Mastering Studio" below).
+1.7.5: released as free software (GNU AGPLv3), with the source code as a separate zip.
+1.7.4: Tape (Modeled) uses about 40 % less CPU on normal material.
+1.7.3: README notes the CPU use of Tape (Modeled).
+1.7.2: Tube types no longer alias on high notes; Tape (Modeled) worst case bounded.
+1.7.1: Tape (Modeled) no longer aliases on high notes (THE_LAB fix).
+New in 1.7: linear-phase crossovers (Multiband, Stereo), Auto Release, modeled
+Tape and Tube saturation, Mono Bass and Mono-Safe width, a Transparent limiter
+style and 9th-order dither noise shaping. All off by default; see README.md.
+New in 1.6: the chart shows a view for whichever module you select.
+New in 1.1: click Assistant (top bar) for automatic starting settings from a
+generic target curve (Pop, Rock, Hip-Hop, R&B, EDM, Singer-Songwriter,
+Acoustic, Jazz, Classical) or your own reference tracks.
+See README.md > Master Assistant.
+
+If Windows SmartScreen warns that the app is from an unknown publisher (it is
+not code-signed), click "More info" and then "Run anyway".
+
+For live input instead of a file, use Options > Audio/MIDI Settings..., then
+untick "Mute audio input".
+
+Upgrading from Mastering Studio (1.7.5 and earlier)
+---------------------------------------------------
+It is the same plugin under a new name. Your DAW sessions load it as before,
+and your saved presets are copied to the new folder automatically. Install
+VST3.bat removes the old "Mastering Studio.vst3" so the plugin isn't listed
+twice; if you install by hand, delete the old folder yourself. The standalone
+app starts with default audio settings once; choose your audio device again
+under Options > Audio/MIDI Settings.
+
+Uninstall
+---------
+Delete C:\Program Files\Common Files\VST3\Open Mastering Studio.vst3 and the .exe.
+Your presets are kept in Documents\Open Mastering Studio\Presets.
