@@ -36,6 +36,13 @@ The standalone `.exe` is a single file; copy it anywhere.
 
 The version shows next to the **OPEN MASTERING STUDIO** title in both the app and the plugin, and in the standalone window's title bar. Windows shows the same version under right-click → Properties → Details for both files. Before 1.6.2, those Properties wrongly said 1.2.0.
 
+### 1.8.1
+
+- **A look shared with Clean Tone Studio and Open Vocal Studio.** The title (OPEN MASTERING in white, STUDIO in blue) is larger, with the version right after it. Panel titles (EQUALIZER, METERS, MASTER ASSISTANT and the rest) are blue with a short underline.
+- **Buttons follow one rule in all three:** buttons that stay lit are in capitals (ON, COMPARE, LEVEL MATCH, ASSISTANT, ALWAYS SHOW EQ, LOOP, LEARN, LISTEN, BYPASS, SOLO, LIN. PHASE and the other switches); buttons that do something once are not (Save, Copy A>B, Open..., Export Master..., Analyze & Apply). The Assistant's hints name the buttons as they read: "press LEARN", "press STOP LEARNING".
+- At the smallest window size (1200 px wide) the preset box is narrower, so a long preset name can wrap onto two lines.
+- No change to the audio; sessions and presets load as before.
+
 ### 1.8.0
 
 - **Renamed Open Mastering Studio** to avoid confusion with other products. It's the same plugin: its plugin ID hasn't changed, so DAW sessions made with "Mastering Studio" load it as before.
@@ -95,12 +102,12 @@ Click a module in the chain strip to edit it, and use its LED to switch it on or
 |---|---|
 | **Input** | Trim into the chain. |
 | **EQ** | Low cut (12/24/48 dB/oct), low shelf, 3 bells, high shelf, high cut. Can work on Stereo, Mid only or Side only. Drag the points on the analyzer. They're labeled like the panel: **LC** low cut, **LS** low shelf, **1–3** bells, **HS** high shelf, **HC** high cut. You can also scroll on a bell to change its Q, and double-click to reset the gain (or to switch a cut filter on or off). The filters are modulation-safe, so sweeping them doesn't zip. |
-| **Multiband** | 3 phase-aligned Linkwitz-Riley bands (they sum flat), each with threshold, ratio, attack, release, gain, solo and bypass. **Lin. Phase** switches to linear-phase crossovers with the same 24 dB/oct slopes but no phase shift at the band edges (adds about 90 ms of latency). **Auto Rel.** makes the release program-dependent: fast after short peaks, slow on sustained material, so dense passages don't pump. |
+| **Multiband** | 3 phase-aligned Linkwitz-Riley bands (they sum flat), each with threshold, ratio, attack, release, gain, solo and bypass. **LIN. PHASE** switches to linear-phase crossovers with the same 24 dB/oct slopes but no phase shift at the band edges (adds about 90 ms of latency). **AUTO REL.** makes the release program-dependent: fast after short peaks, slow on sustained material, so dense passages don't pump. |
 | **Glue Comp** | Stereo-linked soft-knee bus compressor with a sidechain low cut and a parallel mix. |
 | **Saturation** | 8× oversampled. **Tape**, **Tube** and **Soft Clip** are fixed curves. **Tape (Modeled)** is a magnetic hysteresis model (Jiles-Atherton) with record pre-emphasis and playback de-emphasis and a gentle head bump: the highs saturate first, and the color depends on level and on what the music just did. **Tube (Modeled)** shifts its bias with the signal, so loud passages "bloom" with more even harmonics while quiet ones stay clean. The small-signal level stays the same, so Drive changes the color rather than the volume. 8× keeps audible aliasing below −83 dB at moderate drive (2× measured about −31 dB). |
-| **Stereo** | Mid/side width in 3 bands (0–200 %). **Mono Bass** removes the stereo part below its frequency (24 dB/oct, 40–300 Hz). **Mono-Safe** turns the widening down whenever it would push the left/right correlation below zero (it never narrows below what the mix already had). **Lin. Phase** uses linear-phase crossovers: the side is shaped by one zero-phase filter and the mid is only delayed (adds about 90 ms of latency). |
+| **Stereo** | Mid/side width in 3 bands (0–200 %). **Mono Bass** removes the stereo part below its frequency (24 dB/oct, 40–300 Hz). **MONO-SAFE** turns the widening down whenever it would push the left/right correlation below zero (it never narrows below what the mix already had). **LIN. PHASE** uses linear-phase crossovers: the side is shaped by one zero-phase filter and the mid is only delayed (adds about 90 ms of latency). |
 | **Limiter** | Look-ahead brickwall limiter with two styles. **Classic** (1.5 ms look-ahead, one release time) is the 1.6 limiter. **Transparent** uses 3 ms of look-ahead, a program-dependent release (a slow follower holds the average reduction, so the gain recovers fast after a lone peak but does not pump on dense material) and two cascaded smoothing stages, which give an S-shaped gain curve with no corners. Measured on an 80 Hz tone pushed 10 dB into the limiter: −57 dB THD versus −40 dB for Classic. Both use 8× true-peak detection (48-tap interpolation), followed by a second, gentle true-peak stage with a 96-tap detector that catches the small overs the main limiter's own gain changes create. Measured against exact waveform reconstruction, realistic masters hold −0.99 dBTP at a −1.0 ceiling with 6–18 dB of limiting. |
-| **Output** | Final trim (which can only lower the level), plus TPDF dither for 24 or 16 bit. **Shaping** at 44.1/48 kHz uses Wannamaker's 9th-order psychoacoustic (F-weighted) curve: about 18 dB less dither noise in the 1–6 kHz range where hearing is most sensitive, with the excess moved above 15 kHz. At 88.2 kHz and up it moves the noise above 20 kHz. |
+| **Output** | Final trim (which can only lower the level), plus TPDF dither for 24 or 16 bit. **SHAPING** at 44.1/48 kHz uses Wannamaker's 9th-order psychoacoustic (F-weighted) curve: about 18 dB less dither noise in the 1–6 kHz range where hearing is most sensitive, with the excess moved above 15 kHz. At 88.2 kHz and up it moves the noise above 20 kHz. |
 
 Latency is 354–458 samples depending on sample rate (about 7.5–8 ms at 44.1/48 kHz). It comes from the limiter look-ahead, the true-peak stages and the saturation oversampling. Each linear-phase option adds about 90 ms, and the Transparent limiter adds 1.5 ms. Switching one of these while audio plays gives a short, smooth gap (the output fades out, the new delay is reported to the host, and the audio fades back in). It's reported to the host, so your DAW compensates for it automatically, and the test suite confirms the reported value matches the measured delay exactly.
 
@@ -124,7 +131,7 @@ The rest of the plugin adds about 0.4 µs per sample at Loud & Punchy settings. 
 
 ## Module views
 
-The chart above the chain strip follows the module you select. Turn on **Always show EQ** to keep the EQ curve there instead.
+The chart above the chain strip follows the module you select. Turn on **ALWAYS SHOW EQ** to keep the EQ curve there instead.
 
 | Module | What the chart shows |
 |---|---|
@@ -147,8 +154,8 @@ The views run from the same lock-free, allocation-free data feed as the meters, 
 
 ## Comparing honestly
 
-- **Compare** plays the unprocessed input, time-aligned.
-- With **Level Match** on, the input plays at the same loudness as the master, measured continuously, so you judge tone rather than volume.
+- **COMPARE** plays the unprocessed input, time-aligned.
+- With **LEVEL MATCH** on, the input plays at the same loudness as the master, measured continuously, so you judge tone rather than volume.
 - **A / B** are two complete settings slots, and **Copy A>B** duplicates the current one.
 - **Monitor** lets you listen in Mono, Side only, Left or Right. It changes only what you hear, not the meters.
 
@@ -208,14 +215,14 @@ Your DAW's program/preset display follows along:
 
 ## Master Assistant
 
-Click **Assistant** in the top bar. While Learn is capturing, that button turns into a blinking red **● Learning**, and a badge on the chart shows how much has been captured.
+Click **ASSISTANT** in the top bar. While Learn is capturing, that button turns into a blinking red **● LEARNING**, and a badge on the chart shows how much has been captured.
 
 While **Analyze & Apply** runs, a badge on the chart shows **ANALYZING & APPLYING** with a percentage, the current step and a progress bar, and the top-bar button reads **Analyzing NN%**. When it finishes, a notice appears for a few seconds: green **✓ Settings applied** with the new settings' name, or red/gray if it couldn't run or was canceled. The assistant listens to your track and sets up the whole chain as a starting point for a clean, clear, dynamic and loud master. Everything it chooses lands on the normal controls, so you can keep adjusting. **Revert** puts back exactly what you had before.
 
 ### 1. Give it the track
 
 - **Standalone app:** load the file in the player and the assistant analyzes the whole file.
-- **Plugin, or live input:** press **Learn**, play the song (the whole song is best, at least 10 seconds), then press Learn again. Silence is skipped, and up to about 5 minutes is captured.
+- **Plugin, or live input:** press **LEARN**, play the song (the whole song is best, at least 10 seconds), then press **STOP LEARNING**. Silence is skipped, and up to about 5 minutes is captured.
 
 ### 2. Choose a target
 
@@ -272,7 +279,7 @@ If reaching the loudness would need more limiting than the style allows, the ass
 
 ### 3. Reference tracks
 
-Click **Add…** or drop audio files onto the Assistant panel. Each reference is analyzed once, and its profile (tonal balance, loudness, dynamics, width) is saved with your session or project. Select a reference and press **Listen** to hear it in place of your master at the same loudness, so you compare tone and dynamics rather than volume. Turn on **Use their loudness** to aim for the references' loudness instead of the style's. It's still capped to protect dynamics.
+Click **Add…** or drop audio files onto the Assistant panel. Each reference is analyzed once, and its profile (tonal balance, loudness, dynamics, width) is saved with your session or project. Select a reference and press **LISTEN** to hear it in place of your master at the same loudness, so you compare tone and dynamics rather than volume. Turn on **USE THEIR LOUDNESS** to aim for the references' loudness instead of the style's. It's still capped to protect dynamics.
 
 ### What it does
 

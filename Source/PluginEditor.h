@@ -33,6 +33,18 @@ inline juce::Font uiFont (float h, bool bold = false)
     return juce::Font (juce::FontOptions (h, bold ? juce::Font::bold : juce::Font::plain));
 }
 
+// A panel title: accent colour, 13.5 px bold, with a short underline. The same style as the section
+// titles of Clean Tone Studio and Open Vocal Studio.
+inline void drawSectionTitle (juce::Graphics& g, juce::Rectangle<int> panel, const juce::String& title)
+{
+    const auto band = panel.toFloat().reduced (12.0f, 0.0f).removeFromTop (26.0f);
+    g.setColour (Theme::accent);
+    g.setFont (uiFont (13.5f, true));
+    g.drawText (title, band, juce::Justification::centredLeft);
+    g.setColour (Theme::accent.withAlpha (0.35f));
+    g.fillRect (band.getX(), band.getBottom(), 28.0f, 2.0f);
+}
+
 class MasterLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
@@ -203,7 +215,7 @@ private:
     void openFile();
     void exportFile();
     MasteringAudioProcessor& proc;
-    juce::TextButton openBtn { "Open..." }, playBtn { "Play" }, stopBtn { "Stop" }, loopBtn { "Loop" }, ejectBtn { "Eject" }, exportBtn { "Export Master..." };
+    juce::TextButton openBtn { "Open..." }, playBtn { "Play" }, stopBtn { "Stop" }, loopBtn { "LOOP" }, ejectBtn { "Eject" }, exportBtn { "Export Master..." };
     juce::ComboBox format;
     juce::AudioThumbnailCache cache { 4 };
     juce::AudioThumbnail thumb;
@@ -231,8 +243,8 @@ private:
     MasteringAudioProcessor& proc;
     juce::ComboBox curveBox, styleBox;
     juce::Slider amount;
-    juce::TextButton refLoudBtn { "Use their loudness" };
-    juce::TextButton learnBtn { "Learn" }, addRefBtn { "Add..." }, removeRefBtn { "Remove" }, listenBtn { "Listen" };
+    juce::TextButton refLoudBtn { "USE THEIR LOUDNESS" };
+    juce::TextButton learnBtn { "LEARN" }, addRefBtn { "Add..." }, removeRefBtn { "Remove" }, listenBtn { "LISTEN" };
     juce::TextButton runBtn { "Analyze & Apply" }, cancelBtn { "Cancel" }, revertBtn { "Revert" };
     juce::TextEditor notes;
     std::unique_ptr<juce::FileChooser> chooser;
@@ -263,7 +275,7 @@ public:
     void mouseMove (const juce::MouseEvent&) override;
     static juce::String aboutText();                      // copyright, license and no-warranty notice
     static juce::Rectangle<int> titleArea();             // the title + version (clickable), measured from the fonts
-    static constexpr float TitleFontSize = 17.0f;
+    static constexpr float TitleFontSize = 22.0f, VersionFontSize = 12.0f;   // shared with Open Vocal Studio and Clean Tone Studio
 
 private:
     void timerCallback() override;
@@ -278,9 +290,9 @@ private:
     juce::TooltipWindow tooltips { this, 600 };
 
     juce::ComboBox presetBox;
-    juce::TextButton prevBtn { "<" }, nextBtn { ">" }, saveBtn { "Save" }, assistantBtn { "Assistant" };
+    juce::TextButton prevBtn { "<" }, nextBtn { ">" }, saveBtn { "Save" }, assistantBtn { "ASSISTANT" };
     juce::TextButton aBtn { "A" }, bBtn { "B" }, copyBtn { "Copy A>B" };
-    juce::TextButton compareBtn { "Compare" }, matchBtn { "Level Match" };
+    juce::TextButton compareBtn { "COMPARE" }, matchBtn { "LEVEL MATCH" };
     juce::ComboBox monitorBox;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> compareA, matchA;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> monitorA;
@@ -292,7 +304,7 @@ private:
     GlueView glueView;
     SaturationView satView;
     LimiterView limView;
-    juce::TextButton pinEqBtn { "Always show EQ" };
+    juce::TextButton pinEqBtn { "ALWAYS SHOW EQ" };
     AssistantPanel assistantPanel;
     juce::Rectangle<int> chartArea;
     int blink = 0;

@@ -81,13 +81,13 @@ Measured independently of the limiter's own detector. *Exact* is near-ideal band
 
 | Module | 48 kHz | 96 kHz |
 |---|---|---|
-| EQ (all bands active) | 0.32 % | 0.60 % |
-| Multiband compressor | 0.34 % | 0.55 % |
-| Glue compressor | 0.12 % | 0.21 % |
-| Saturation (8x oversampled, while on) | 3.53 % | 6.59 % |
-| Stereo imager | 0.15 % | 0.28 % |
-| Limiter (true peak) | 0.88 % | 1.71 % |
-| Loudness meters (in, and out with true peak) | 0.50 % | 1.03 % |
-| Whole plugin (processBlock, Loud & Punchy) | 5.55 % | 11.28 % |
+| EQ (all bands active) | 0.30 % | 0.60 % |
+| Multiband compressor | 0.32 % | 0.55 % |
+| Glue compressor | 0.11 % | 0.21 % |
+| Saturation (8x oversampled, while on) | 3.24 % | 6.55 % |
+| Stereo imager | 0.13 % | 0.26 % |
+| Limiter (true peak) | 0.82 % | 1.66 % |
+| Loudness meters (in, and out with true peak) | 0.49 % | 0.98 % |
+| Whole plugin (processBlock, Loud & Punchy) | 5.50 % | 10.79 % |
 
 The limiter row includes the second true-peak stage. Switched-off modules keep running in the background (so switching them on never clicks), except saturation, which rests after half a second off. The whole-plugin figure uses Loud & Punchy, which has saturation on.

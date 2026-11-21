@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(MasteringStudio VERSION 1.8.0 LANGUAGES C CXX)
+project(MasteringStudio VERSION 1.8.1 LANGUAGES C CXX)
 
 # Product name shown to users (files, window, DAW). The CMake target, plugin codes and the saved-state tag
 # stay "MasteringStudio" / Msto / Msst, so sessions made with earlier versions still find and load the plugin.

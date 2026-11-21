@@ -109,7 +109,7 @@ ParamControl::ParamControl (AudioProcessorValueTreeState& apvts, const String& i
     if (dynamic_cast<AudioParameterBool*> (p) != nullptr)
     {
         kind = Toggle;
-        button.setButtonText (caption);
+        button.setButtonText (caption.toUpperCase());   // a switch: capitals (one-shot actions use title case)
         button.setClickingTogglesState (true);
         button.setTooltip (p->getName (64));
         bA = std::make_unique<AudioProcessorValueTreeState::ButtonAttachment> (apvts, id, button);
@@ -179,9 +179,7 @@ void ModulePanel::paint (Graphics& g)
 {
     g.setColour (Theme::panel);
     g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
-    g.setColour (Theme::text);
-    g.setFont (uiFont (14.0f, true));
-    g.drawText (title.toUpperCase(), 14, 6, 300, 20, Justification::centredLeft);
+    drawSectionTitle (g, getLocalBounds(), title.toUpperCase());
 
     for (size_t i = 0; i < groups.size(); ++i)
     {
@@ -874,9 +872,7 @@ void MeterPanel::paint (Graphics& g)
 {
     g.setColour (Theme::panel);
     g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
-    g.setColour (Theme::text);
-    g.setFont (uiFont (14.0f, true));
-    g.drawText ("METERS", 12, 8, 200, 18, Justification::centredLeft);
+    drawSectionTitle (g, getLocalBounds(), "METERS");
 
     const float ceilDb = proc.apvts.getRawParameterValue (ID::limCeiling)->load();
 
@@ -1338,14 +1334,14 @@ void AssistantPanel::update()
     learnBtn.setToggleState (learning, dontSendNotification);
     const double secs = proc.getLearnedSeconds();
     const String mmss = String ((int) secs / 60) + ":" + String ((int) secs % 60).paddedLeft ('0', 2);
-    learnBtn.setButtonText (learning ? "Stop learning (" + mmss + ")" : secs > 0 ? "Learn again" : "Learn");
+    learnBtn.setButtonText (learning ? "STOP LEARNING (" + mmss + ")" : secs > 0 ? "LEARN AGAIN" : "LEARN");
     if (proc.isFileLoaded())
         sourceText = "Analyzes the whole loaded file:\n" + proc.getLoadedFile().getFileName();
     else if (secs > 0)
         sourceText = "Captured " + mmss + " of audio" + (learning ? " - keep playing, the whole song is best." : ".");
     else
-        sourceText = proc.isStandalone() ? "Open a file in the player above, or press Learn and play live input."
-                                         : "Press Learn, play the song in your DAW (the whole song is best), then stop.";
+        sourceText = proc.isStandalone() ? "Open a file in the player above, or press LEARN and play live input."
+                                         : "Press LEARN, play the song in your DAW (the whole song is best), then stop.";
 
     if (auto r = proc.takeAssistantResult())
         if (! r->cancelled && r->error.isEmpty()) { proc.applyAssistantResult (*r); showResult (*r); }
@@ -1407,9 +1403,7 @@ void AssistantPanel::paint (Graphics& g)
 {
     g.setColour (Theme::panel);
     g.fillRoundedRectangle (getLocalBounds().toFloat(), 6.0f);
-    g.setColour (Theme::text);
-    g.setFont (uiFont (14.0f, true));
-    g.drawText ("MASTER ASSISTANT", 14, 8, 300, 20, Justification::centredLeft);
+    drawSectionTitle (g, getLocalBounds(), "MASTER ASSISTANT");
 
     auto heading = [&g] (const String& t, int x, int y) { g.setColour (Theme::dim); g.setFont (uiFont (11.0f, true)); g.drawText (t, x, y, 300, 14, Justification::centredLeft); };
     heading ("SOURCE", sourceArea.getX(), sourceArea.getY() - 16);
@@ -1763,26 +1757,27 @@ void MasteringAudioProcessorEditor::paintOverChildren (Graphics& g)
 void MasteringAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Theme::bg);
-    // "OPEN MASTERING" + "STUDIO" (accent) + version, straight from the build settings
+    // "OPEN MASTERING" + "STUDIO" (accent) + version, straight from the build settings. Drawn the same way
+    // in Open Mastering Studio, Open Vocal Studio and Clean Tone Studio (22 px bold, version 12 px beside it).
     const auto titleFont = uiFont (TitleFontSize, true);
     const String first = "OPEN MASTERING ";
     const int firstW = GlyphArrangement::getStringWidthInt (titleFont, first);
     const int studioW = GlyphArrangement::getStringWidthInt (titleFont, "STUDIO");
     g.setFont (titleFont);
     g.setColour (Theme::text);
-    g.drawText (first, 16, 10, firstW + 4, 28, Justification::centredLeft);
+    g.drawText (first, 16, 4, firstW + 4, 40, Justification::centredLeft);
     g.setColour (Theme::accent);
-    g.drawText ("STUDIO", 16 + firstW, 10, studioW + 4, 28, Justification::centredLeft);
+    g.drawText ("STUDIO", 16 + firstW, 4, studioW + 4, 40, Justification::centredLeft);
     g.setColour (Theme::dim);
-    g.setFont (uiFont (11.5f));
-    g.drawText (versionText(), 16 + firstW + studioW + 7, 17, 60, 18, Justification::centredLeft);
+    g.setFont (uiFont (VersionFontSize));
+    g.drawText (versionText(), 16 + firstW + studioW + 8, 7, 80, 40, Justification::centredLeft);   // on the title's baseline
 }
 
 Rectangle<int> MasteringAudioProcessorEditor::titleArea()
 {
     const auto titleFont = uiFont (TitleFontSize, true);
     const int w = GlyphArrangement::getStringWidthInt (titleFont, "OPEN MASTERING STUDIO")
-                + 7 + GlyphArrangement::getStringWidthInt (uiFont (11.5f), versionText());
+                + 8 + GlyphArrangement::getStringWidthInt (uiFont (VersionFontSize), versionText());
     return { 10, 6, 6 + w + 6, 36 };
 }
 
@@ -1917,8 +1912,8 @@ void MasteringAudioProcessorEditor::timerCallback()
         }
         wasBusy = busy;
         const bool notice = Time::getMillisecondCounterHiRes() < noticeUntil;
-        const String btnText = busy ? "Analyzing " + String (roundToInt (proc.getAssistantProgress() * 100.0f)) + "%"
-                             : learning ? String::fromUTF8 ("\xe2\x97\x8f Learning") : String ("Assistant");
+        const String btnText = busy ? "ANALYZING " + String (roundToInt (proc.getAssistantProgress() * 100.0f)) + "%"
+                             : learning ? String::fromUTF8 ("\xe2\x97\x8f LEARNING") : String ("ASSISTANT");
         const Colour btnColour = busy ? Theme::warm.withAlpha (0.55f)
                                : learning ? Theme::red.withAlpha ((blink / 15) % 2 == 0 ? 0.7f : 0.35f) : Theme::panel2;
         if (assistantBtn.getButtonText() != btnText) assistantBtn.setButtonText (btnText);

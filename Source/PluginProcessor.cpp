@@ -734,7 +734,7 @@ void MasteringAudioProcessor::startLearn()
     capture.setSize (2, cap, false, false, true);
     captureWritten = 0;
     capturing = true;
-    setStatus ("Learning - play the song, then press Learn again.");
+    setStatus ("Learning - play the song, then press STOP LEARNING.");
 }
 
 void MasteringAudioProcessor::addReferenceFile (const juce::File& file)
@@ -823,8 +823,8 @@ bool MasteringAudioProcessor::startAssistant (juce::String& error)
         const int n = captureWritten.load();
         if (n < (int) (10.0 * currentSampleRate))
         {
-            error = isStandalone() ? "Open a file first, or press Learn and play at least 10 seconds of the song."
-                                   : "Press Learn, play the song (at least 10 seconds - the whole song is best), then press Learn again.";
+            error = isStandalone() ? "Open a file first, or press LEARN and play at least 10 seconds of the song."
+                                   : "Press LEARN, play the song (at least 10 seconds - the whole song is best), then press STOP LEARNING.";
             return false;
         }
         captured = std::make_shared<juce::AudioBuffer<float>> (2, n);
