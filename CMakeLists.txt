@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(MasteringStudio VERSION 1.8.1 LANGUAGES C CXX)
+project(MasteringStudio VERSION 1.8.2 LANGUAGES C CXX)
 
 # Product name shown to users (files, window, DAW). The CMake target, plugin codes and the saved-state tag
 # stay "MasteringStudio" / Msto / Msst, so sessions made with earlier versions still find and load the plugin.
@@ -12,12 +12,24 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 add_subdirectory(external/JUCE)
 
+# Windows: VST3 + app (unchanged). Linux also builds LV2 (for Ardour and other LV2 hosts).
+# The LV2 URI identifies the plugin in saved LV2 sessions: never change it once a Linux build is out.
+set(MS_FORMATS VST3 Standalone)
+set(MS_COMPANY_EMAIL "openstudio.plugins@gmail.com")
+if(UNIX AND NOT APPLE)
+    list(APPEND MS_FORMATS LV2)
+    set(MS_COMPANY_EMAIL "mailto:openstudio.plugins@gmail.com")   # LV2 writes it as a URI (foaf:mbox)
+endif()
+
 juce_add_plugin(MasteringStudio
     COMPANY_NAME "${MS_PRODUCT_NAME}"
+    COMPANY_WEBSITE "https://aloomens.github.io/open-mastering-studio/"
+    COMPANY_EMAIL "${MS_COMPANY_EMAIL}"
     PRODUCT_NAME "${MS_PRODUCT_NAME}"
     PLUGIN_MANUFACTURER_CODE Msto
     PLUGIN_CODE Msst
-    FORMATS VST3 Standalone
+    FORMATS ${MS_FORMATS}
+    LV2URI "https://aloomens.github.io/open-mastering-studio/"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
@@ -89,5 +101,14 @@ if(MS_BUILD_TESTS)
     target_compile_definitions(MasteringTest PRIVATE ${MS_DEFS} JUCE_MODAL_LOOPS_PERMITTED=1)
     target_link_libraries(MasteringTest
         PRIVATE MasteringStudioAssets juce::juce_audio_utils juce::juce_dsp
+        PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_warning_flags)
+
+    # loads the built plugin like a DAW does (VST3; on Linux also LV2) and runs audio through it
+    juce_add_console_app(PluginHostTest PRODUCT_NAME "PluginHostTest")
+    target_sources(PluginHostTest PRIVATE Tests/HostTest.cpp)
+    target_compile_definitions(PluginHostTest PRIVATE JUCE_PLUGINHOST_VST3=1 JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0
+        $<$<PLATFORM_ID:Linux>:JUCE_PLUGINHOST_LV2=1>)
+    target_link_libraries(PluginHostTest
+        PRIVATE juce::juce_audio_processors juce::juce_gui_basics
         PUBLIC juce::juce_recommended_config_flags juce::juce_recommended_warning_flags)
 endif()

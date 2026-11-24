@@ -1792,8 +1792,9 @@ String MasteringAudioProcessorEditor::aboutText()
            "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without "
            "even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU "
            "Affero General Public License (LICENSE.txt, included with the program) for more details.\n\n"
-           "The source code is distributed alongside the program (MasteringStudio-<version>-source.zip).\n\n"
-           "Built with JUCE (AGPLv3) and the Steinberg VST3 and ASIO SDKs (GPLv3). "
+           "The source code is distributed alongside the program (OpenMasteringStudio-<version>-source.zip).\n\n"
+           "Questions, ideas, problems: openstudio.plugins@gmail.com or GitHub Discussions.\n\n"
+           "Built with JUCE (AGPLv3), the Steinberg VST3 and ASIO SDKs (GPLv3) and, on Linux, the LV2 SDK (ISC). "
            "VST and ASIO are trademarks of Steinberg Media Technologies GmbH. "
            "See THIRD-PARTY-NOTICES.txt.";
 }

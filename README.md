@@ -1,6 +1,6 @@
 # Open Mastering Studio (VST3 + Standalone)
 
-A complete mastering chain for Windows: EQ, multiband compression, glue compression, saturation, stereo imaging, a true-peak limiter and dither. It has EBU R128 / BS.1770 loudness metering, a spectrum analyzer with draggable EQ points, level-matched A/B comparison and, in the standalone app, file playback and export.
+A complete mastering chain for Windows (and, as a beta, Linux): EQ, multiband compression, glue compression, saturation, stereo imaging, a true-peak limiter and dither. It has EBU R128 / BS.1770 loudness metering, a spectrum analyzer with draggable EQ points, level-matched A/B comparison and, in the standalone app, file playback and export.
 
 ![Open Mastering Studio: the EQ view with the analyzer, the module chain and the loudness meters](Resources/screenshot.png)
 
@@ -15,7 +15,7 @@ Open Mastering Studio is free software, released under the **GNU Affero General 
 - **If you change it and share your version** (or run it for others over a network), your changes must be released under the same license.
 - **There is no warranty.** See the license for the exact terms.
 
-It is built with JUCE (AGPLv3) and the Steinberg VST3 and ASIO SDKs (both used under GPLv3); see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt). Click the **OPEN MASTERING STUDIO** title in the app or plugin to see the license notice.
+It is built with JUCE (AGPLv3), the Steinberg VST3 and ASIO SDKs (both used under GPLv3) and, for the Linux LV2 plugin, the LV2 SDK (ISC); see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt). Click the **OPEN MASTERING STUDIO** title in the app or plugin to see the license notice.
 
 The source package contains everything needed to build: this folder plus JUCE 8.0.4 and the ASIO SDK under `external/`. Build with Visual Studio 2022 (Build Tools) and CMake, as described below. Unpack it to a short path such as `C:\src`: deep folders push the compiler's working files past Windows' 260-character path limit, and the build fails.
 
@@ -23,8 +23,26 @@ The source package contains everything needed to build: this folder plus JUCE 8.
 
 - **Questions** ("how do I...?"): [Discussions Q&A](https://github.com/aloomens/open-mastering-studio/discussions/categories/q-a).
 - **Ideas and feature requests:** [Discussions Ideas](https://github.com/aloomens/open-mastering-studio/discussions/categories/ideas), where others can upvote them, or a [feature request](https://github.com/aloomens/open-mastering-studio/issues/new/choose).
-- **Problems:** a [bug report](https://github.com/aloomens/open-mastering-studio/issues/new/choose). Please include the Open Mastering Studio version (next to the title), your DAW, your Windows version and the steps that show the problem.
+- **Problems:** a [bug report](https://github.com/aloomens/open-mastering-studio/issues/new/choose). Please include the Open Mastering Studio version (next to the title), your DAW, your Windows version (or Linux distribution) and the steps that show the problem.
 - **Email:** [openstudio.plugins@gmail.com](mailto:openstudio.plugins@gmail.com), for anything, especially if you don't have a GitHub account.
+
+The About box (click the **OPEN MASTERING STUDIO** title) shows the same contact.
+
+## Linux (beta)
+
+An experimental Linux build (64-bit Intel/AMD) is published as a separate **pre-release** on the [Releases](https://github.com/aloomens/open-mastering-studio/releases) page: `OpenMasteringStudio-<version>-linux-x64-beta.zip`. It is the same program built natively for Linux, as a VST3 plugin, an LV2 plugin and a standalone app. It passes the same automated tests as the Windows build and loads in Ardour, but few people have tried it yet. Please report how it works for you in Discussions or by email.
+
+- **Needs** glibc 2.38 or newer (Ubuntu 24.04, Debian 13, Fedora 39, Linux Mint 22 or later), X11 or XWayland, and ALSA, JACK or PipeWire.
+- **Install:** unzip it and run `./install.sh`, which copies the plugins to `~/.vst3` and `~/.lv2`, or copy the two folders there yourself. The app runs from anywhere. The INSTALL.txt in the zip has the details.
+- **Build it yourself** from the source zip (Ubuntu/Debian package names):
+
+```sh
+sudo apt install build-essential cmake ninja-build pkg-config libasound2-dev libjack-jackd2-dev \
+  libfreetype-dev libfontconfig1-dev libx11-dev libxcomposite-dev libxcursor-dev libxext-dev \
+  libxinerama-dev libxrandr-dev libxrender-dev libglu1-mesa-dev mesa-common-dev
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build
+sh Tools/package-linux.sh    # optional: makes the zip in dist/
+```
 
 ## Builds
 
@@ -42,6 +60,14 @@ Copy-Item -Recurse -Force "C:\Code\MasteringStudio\build\MasteringStudio_artefac
 The standalone `.exe` is a single file; copy it anywhere.
 
 The version shows next to the **OPEN MASTERING STUDIO** title in both the app and the plugin, and in the standalone window's title bar. Windows shows the same version under right-click → Properties → Details for both files. Before 1.6.2, those Properties wrongly said 1.2.0.
+
+### 1.8.2
+
+- **Linux beta:** a native Linux build with VST3, LV2 and the standalone app, published as a separate pre-release (see [Linux (beta)](#linux-beta)). The Windows download is unchanged apart from the points below.
+- **About box:** it now gives the contact for questions, ideas and problems (openstudio.plugins@gmail.com or GitHub Discussions) and names the source zip by its current name.
+- **Plugin info:** DAWs that show a plugin's vendor details now list the website and the contact email.
+- **New test:** `PluginHostTest` loads the built plugin the way a DAW does and checks audio, latency, recall, presets and the editor.
+- No change to the audio; sessions and presets load as before.
 
 ### 1.8.1
 

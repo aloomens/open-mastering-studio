@@ -17,10 +17,28 @@ static void* countedAlloc (std::size_t n)
     if (void* p = std::malloc (n == 0 ? 1 : n)) return p;
     throw std::bad_alloc();
 }
+// Over-aligned allocation: MSVC has no std::aligned_alloc, POSIX has posix_memalign.
+static void* platformAlignedAlloc (std::size_t n, std::size_t align)
+{
+   #if JUCE_WINDOWS
+    return _aligned_malloc (n, align);
+   #else
+    void* p = nullptr;
+    return posix_memalign (&p, align < sizeof (void*) ? sizeof (void*) : align, n) == 0 ? p : nullptr;
+   #endif
+}
+static void platformAlignedFree (void* p) noexcept
+{
+   #if JUCE_WINDOWS
+    _aligned_free (p);
+   #else
+    std::free (p);
+   #endif
+}
 static void* countedAllocAligned (std::size_t n, std::align_val_t a)
 {
     if (countAllocations) ++allocationCount;
-    if (void* p = _aligned_malloc (n == 0 ? 1 : n, (std::size_t) a)) return p;
+    if (void* p = platformAlignedAlloc (n == 0 ? 1 : n, (std::size_t) a)) return p;
     throw std::bad_alloc();
 }
 void* operator new (std::size_t n) { return countedAlloc (n); }
@@ -33,10 +51,10 @@ void operator delete (void* p) noexcept { std::free (p); }
 void operator delete[] (void* p) noexcept { std::free (p); }
 void operator delete (void* p, std::size_t) noexcept { std::free (p); }
 void operator delete[] (void* p, std::size_t) noexcept { std::free (p); }
-void operator delete (void* p, std::align_val_t) noexcept { _aligned_free (p); }
-void operator delete[] (void* p, std::align_val_t) noexcept { _aligned_free (p); }
-void operator delete (void* p, std::size_t, std::align_val_t) noexcept { _aligned_free (p); }
-void operator delete[] (void* p, std::size_t, std::align_val_t) noexcept { _aligned_free (p); }
+void operator delete (void* p, std::align_val_t) noexcept { platformAlignedFree (p); }
+void operator delete[] (void* p, std::align_val_t) noexcept { platformAlignedFree (p); }
+void operator delete (void* p, std::size_t, std::align_val_t) noexcept { platformAlignedFree (p); }
+void operator delete[] (void* p, std::size_t, std::align_val_t) noexcept { platformAlignedFree (p); }
 
 static int failures = 0;
 static void check (bool ok, const juce::String& what)
@@ -1827,8 +1845,10 @@ int main (int argc, char** argv)
         {
             const auto about = MasteringAudioProcessorEditor::aboutText();
             check (about.contains (versionText()) && about.contains ("GNU Affero General Public License") && about.contains ("WITHOUT ANY WARRANTY")
-                   && about.contains ("source code") && about.contains ("Copyright (C) 2026 Al Oomens") && about.startsWith ("Open Mastering Studio"),
-                   "About box (click the title) shows name, version, copyright, AGPLv3 license, no-warranty notice and where the source is");
+                   && about.contains ("source code") && about.contains ("OpenMasteringStudio-<version>-source.zip")
+                   && about.contains ("Copyright (C) 2026 Al Oomens") && about.startsWith ("Open Mastering Studio")
+                   && about.contains ("openstudio.plugins@gmail.com or GitHub Discussions"),
+                   "About box (click the title) shows name, version, copyright, AGPLv3 license, no-warranty notice, where the source is and the contact");
             check (sp->getName() == "Open Mastering Studio", "the DAW sees the plugin as \"" + sp->getName() + "\"");
         }
         // Top bar: at the smallest and the default window size no control overlaps another or the title

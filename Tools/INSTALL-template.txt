@@ -39,6 +39,9 @@ Run Standalone\Open Mastering Studio.exe from anywhere (Desktop, USB stick, etc.
   2. Shape the master while it plays.
   3. Choose a format and click Export Master...
 
+1.8.2: the About box gives the contact for questions, ideas and problems:
+       openstudio.plugins@gmail.com or GitHub Discussions. A Linux beta is
+       available as a separate pre-release on GitHub.
 1.8.0: renamed Open Mastering Studio (see "Upgrading from Mastering Studio" below).
 1.7.5: released as free software (GNU AGPLv3), with the source code as a separate zip.
 1.7.4: Tape (Modeled) uses about 40 % less CPU on normal material.
